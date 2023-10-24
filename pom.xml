@@ -51,6 +51,25 @@
         <mockito.version>5.6.0</mockito.version>
     </properties>
 
+    <organization>
+        <name>Die Spengergasse</name>
+        <url>https://spengergasse.at</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Joachim Grüneis</name>
+            <email>grueneis@spengergasse.at</email>
+        </developer>
+    </developers>
+
+    <!--
+        To define some of the most common libraries we expect in
+        students projects with predefined/managed versions.
+
+        `dependencyManagement` can also be used through `import` feature
+        of Maven.
+    -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -102,6 +121,10 @@
         </dependencies>
     </dependencyManagement>
 
+    <!--
+        The dependencies in this section are automatically used in
+        any project using `hif-java-maven-parent` as Maven parent project.
+    -->
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -134,6 +157,23 @@
     </dependencies>
 
     <build>
+        <!--
+            Defines plugins and their configurations how they are expected in
+            student projects.
+
+            Configured plugins are:
+
+            * enforcer - to fix a Maven version to be used
+            * clean - just fix the plugin version
+            * compiler - fix the plugin version and which Java to use
+            * surefire - use latest test execution framework
+            * source - generate sources jar
+            * javadoc - generate javadoc stuff
+            * jar - fix plugin version
+            * jacoco - for measuring code coverage at testing
+            * dependency - for downloading source and javadoc jar's
+            * asciidoctor - for writing documentation
+        -->
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -175,11 +215,29 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>${maven-source-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>sources</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>${maven-javadoc-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>javadocs</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -190,6 +248,21 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>prepare-agent</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>report</id>
+                            <phase>test</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -197,9 +270,16 @@
                     <version>${maven-dependency-plugin.version}</version>
                     <executions>
                         <execution>
+                            <id>download-sources</id>
                             <phase>process-resources</phase>
                             <goals>
                                 <goal>sources</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>download-javadoc</id>
+                            <phase>process-resources</phase>
+                            <goals>
                                 <goal>resolve</goal>
                             </goals>
                             <configuration>
@@ -328,6 +408,15 @@
             </plugins>
         </pluginManagement>
 
+        <!--
+            The plugins enabled are:
+
+            * enforcer
+            * source
+            * javadoc
+            * jacoco
+            * dependency
+        -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -336,62 +425,18 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>sources</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>javadocs</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>sources</goal>
-                            <goal>resolve</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>javadoc</classifier>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
