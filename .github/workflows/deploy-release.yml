@@ -1,4 +1,4 @@
-name: Java compile, test and package with Maven
+name: Deploy using Maven
 
 on:
   release:
