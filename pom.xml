@@ -18,15 +18,15 @@
         <project.slides.directory>${project.build.directory}/generated-slides</project.slides.directory>
 
         <!-- to check for versions: https://maven.apache.org/plugins/index.html -->
-        <maven-clean-plugin.version>3.2.0</maven-clean-plugin.version>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
-        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
-        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
-        <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
-        <maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
-        <maven-enforcer-plugin.version>3.3.0</maven-enforcer-plugin.version>
+        <maven-clean-plugin.version>3.4.0</maven-clean-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.10.0</maven-javadoc-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+        <maven-dependency-plugin.version>3.8.0</maven-dependency-plugin.version>
+        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
 
         <!--
             asciidoctor and friends for document generation
@@ -36,19 +36,19 @@
             https://github.com/asciidoctor/asciidoctor-reveal.js
             https://github.com/asciidoctor/asciidoctor-pdf
         -->
-        <asciidoctor.maven.plugin.version>2.2.3</asciidoctor.maven.plugin.version>
-        <asciidoctorj.version>2.5.8</asciidoctorj.version>
-        <asciidoctorj-revealjs.version>5.0.0.rc1</asciidoctorj-revealjs.version>
-        <asciidoctorj.diagram.version>2.2.13</asciidoctorj.diagram.version>
-        <asciidoctorj.pdf.version>2.3.9</asciidoctorj.pdf.version>
+        <asciidoctor.maven.plugin.version>3.0.0</asciidoctor.maven.plugin.version>
+        <asciidoctorj.version>3.0.0</asciidoctorj.version>
+        <asciidoctorj-revealjs.version>5.1.0</asciidoctorj-revealjs.version>
+        <asciidoctorj.diagram.version>2.3.1</asciidoctorj.diagram.version>
+        <asciidoctorj.pdf.version>2.3.18</asciidoctorj.pdf.version>
         <revealjs.version>4.4.0</revealjs.version>
 
         <!-- some Java libraries to use -->
-        <slf4j-api.version>2.0.9</slf4j-api.version>
-        <logback-core.version>1.4.11</logback-core.version>
-        <junit-jupiter-engine.version>5.10.0</junit-jupiter-engine.version>
-        <assertj-core.version>3.24.2</assertj-core.version>
-        <mockito.version>5.6.0</mockito.version>
+        <slf4j-api.version>2.0.16</slf4j-api.version>
+        <logback-core.version>1.5.8</logback-core.version>
+        <junit-jupiter.version>5.11.0</junit-jupiter.version>
+        <assertj.version>3.26.3</assertj.version>
+        <mockito.version>5.13.0</mockito.version>
     </properties>
 
     <organization>
@@ -85,25 +85,25 @@
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
-                <version>${junit-jupiter-engine.version}</version>
+                <version>${junit-jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
-                <version>${junit-jupiter-engine.version}</version>
+                <version>${junit-jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-params</artifactId>
-                <version>${junit-jupiter-engine.version}</version>
+                <version>${junit-jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>${assertj-core.version}</version>
+                <version>${assertj.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -448,4 +448,25 @@
             <url>https://maven.pkg.github.com/die-spengergasse/hif-java-maven-parent</url>
         </repository>
     </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>github_die-spengergasse</id>
+            <name>GitHub Die-Spengergasse</name>
+            <url>https://maven.pkg.github.com/die-spengergasse/*</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <!-- in settings.xml we need to have...
+    <servers>
+        <server>
+            <id>github_die-spengergasse</id>
+            <username></username>
+            <password></password>
+        </server>
+    </servers>
+    -->
 </project>

@@ -2,9 +2,10 @@ name: Java compile, test and package with Maven
 
 on:
   release:
+    types: [created]
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,3 +19,6 @@ jobs:
         run: ./mvnw --batch-mode deploy --file pom.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+# ??  ./mvnw --batch-mode -DuseGitHubPackages=true deploy --file pom.xml
