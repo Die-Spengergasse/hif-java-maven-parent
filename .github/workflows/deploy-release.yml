@@ -11,10 +11,10 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 22
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '22'
+          java-version: '26'
           distribution: 'temurin'
           cache: maven
       - name: Publish to GitHub Packages

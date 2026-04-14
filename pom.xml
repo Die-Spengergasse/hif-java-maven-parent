@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>26</java.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -18,15 +18,16 @@
         <project.slides.directory>${project.build.directory}/generated-slides</project.slides.directory>
 
         <!-- to check for versions: https://maven.apache.org/plugins/index.html -->
-        <maven-clean-plugin.version>3.4.0</maven-clean-plugin.version>
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
-        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.10.0</maven-javadoc-plugin.version>
-        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
-        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
-        <maven-dependency-plugin.version>3.8.0</maven-dependency-plugin.version>
-        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+        <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
+        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
+        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+        <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
+        <maven-dependency-plugin.version>3.10.0</maven-dependency-plugin.version>
+        <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+        <versions-maven-plugin.version>2.21.0</versions-maven-plugin.version>
 
         <!--
             asciidoctor and friends for document generation
@@ -36,19 +37,19 @@
             https://github.com/asciidoctor/asciidoctor-reveal.js
             https://github.com/asciidoctor/asciidoctor-pdf
         -->
-        <asciidoctor.maven.plugin.version>3.0.0</asciidoctor.maven.plugin.version>
-        <asciidoctorj.version>3.0.0</asciidoctorj.version>
-        <asciidoctorj-revealjs.version>5.1.0</asciidoctorj-revealjs.version>
-        <asciidoctorj.diagram.version>2.3.1</asciidoctorj.diagram.version>
-        <asciidoctorj.pdf.version>2.3.18</asciidoctorj.pdf.version>
+        <asciidoctor.maven.plugin.version>3.2.0</asciidoctor.maven.plugin.version>
+        <asciidoctorj.version>3.0.1</asciidoctorj.version>
+        <asciidoctorj-revealjs.version>5.2.0</asciidoctorj-revealjs.version>
+        <asciidoctorj.diagram.version>3.2.1</asciidoctorj.diagram.version>
+        <asciidoctorj.pdf.version>2.3.23</asciidoctorj.pdf.version>
         <revealjs.version>4.4.0</revealjs.version>
 
         <!-- some Java libraries to use -->
-        <slf4j-api.version>2.0.16</slf4j-api.version>
-        <logback-core.version>1.5.8</logback-core.version>
-        <junit-jupiter.version>5.11.0</junit-jupiter.version>
-        <assertj.version>3.26.3</assertj.version>
-        <mockito.version>5.13.0</mockito.version>
+        <slf4j-api.version>2.0.17</slf4j-api.version>
+        <logback-core.version>1.5.32</logback-core.version>
+        <junit-jupiter.version>6.0.3</junit-jupiter.version>
+        <assertj.version>3.27.7</assertj.version>
+        <mockito.version>5.23.0</mockito.version>
     </properties>
 
     <organization>
@@ -72,6 +73,20 @@
     -->
     <dependencyManagement>
         <dependencies>
+            <!-- a pure JVM database for sample or testing implementations... -->
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
+            </dependency>
+            <!-- Servlet API in case of http based samples - supported by Tomcat and Jetty -->
+            <dependency>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>${jakarta.servlet-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- SLF4J and logback are my preferred choice for logging -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -100,12 +115,14 @@
                 <version>${junit-jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
+            <!-- a framework to write assertions in a nice style - https://github.com/assertj/assertj -->
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.version}</version>
                 <scope>test</scope>
             </dependency>
+            <!-- mocking framework - https://github.com/mockito/mockito -->
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
@@ -152,6 +169,16 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -205,11 +232,49 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
+                    <inherited>true</inherited>
+                    <configuration>
+                        <proc>full</proc>
+                        <showWarnings>true</showWarnings>
+                        <showDeprecation>true</showDeprecation>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <properties>
+                            <configurationParameters>
+                                junit.platform.reporting.open.xml.enable = true
+                            </configurationParameters>
+                        </properties>
+                        <argLine>
+                            -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+                            -XX:+EnableDynamicAgentLoading
+                        </argLine>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.junit.platform</groupId>
+                            <artifactId>junit-platform-engine</artifactId>
+                            <version>${junit-platform.version}</version>
+                            <scope>runtime</scope>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.junit.platform</groupId>
+                            <artifactId>junit-platform-launcher</artifactId>
+                            <version>${junit-platform.version}</version>
+                            <scope>runtime</scope>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.junit.platform</groupId>
+                            <artifactId>junit-platform-reporting</artifactId>
+                            <version>${junit-platform.version}</version>
+                            <scope>runtime</scope>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -217,11 +282,11 @@
                     <version>${maven-source-plugin.version}</version>
                     <executions>
                         <execution>
-                            <id>sources</id>
-                            <phase>package</phase>
+                            <id>attach-sources</id>
                             <goals>
                                 <goal>jar</goal>
                             </goals>
+                            <phase>verify</phase>
                         </execution>
                     </executions>
                 </plugin>
@@ -229,20 +294,33 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>${maven-javadoc-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>javadocs</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    <configuration>
+                        <quiet>true</quiet>
+                        <source>${java.version}</source>
+                    </configuration>
+                    <!-- there are some problems with javadoc at wicket and lombok -->
+                    <!--                    <executions>-->
+                    <!--                        <execution>-->
+                    <!--                            <id>attach-javadoc</id>-->
+                    <!--                            <phase>verify</phase>-->
+                    <!--                            <goals>-->
+                    <!--                                <goal>jar</goal>-->
+                    <!--                            </goals>-->
+                    <!--                        </execution>-->
+                    <!--                    </executions>-->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>${maven-jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${maven-war-plugin.version}</version>
+                    <configuration>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
@@ -257,10 +335,10 @@
                         </execution>
                         <execution>
                             <id>report</id>
-                            <phase>test</phase>
                             <goals>
                                 <goal>report</goal>
                             </goals>
+                            <phase>test</phase>
                         </execution>
                     </executions>
                 </plugin>
@@ -287,6 +365,17 @@
                             </configuration>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>${versions-maven-plugin.version}</version>
+                    <configuration>
+                        <ignoredVersions>
+                            <ignoredVersion type="regex">(?i).*[-_\.](alpha|b|beta|rc|m|ea)[-_\.]?[0-9]*.*
+                            </ignoredVersion>
+                        </ignoredVersions>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.asciidoctor</groupId>
